@@ -1,0 +1,66 @@
+
+
+import React from 'react';
+import { FlatList, ActivityIndicator, Text, View, Image } from 'react-native';
+
+export default class FetchExample extends React.Component {
+
+  constructor(props){
+      super(props);
+      this.state ={ isLoading: true}
+  }
+
+  componentDidMount(){
+    return fetch('https://randomuser.me/api/?results=20')
+      .then((response) => response.json())
+      .then((responseJson) => {
+
+        this.setState({
+          isLoading: false,
+          dataSource: responseJson.results,
+        }, function(){
+
+        });
+
+      })
+      .catch((error) =>{
+        console.error(error);
+      });
+  }
+
+
+
+  render(){
+
+    if(this.state.isLoading){
+      return(
+        <View style={{flex: 1, padding: 20}}>
+          <ActivityIndicator/>
+        </View>
+      )
+    }
+
+    return(
+      <View style={{flex: 1, paddingTop:20}}>
+        <FlatList
+        data={this.state.dataSource}
+        // style={{ justifyContent:'center'}} 
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({item}) =>{
+            return(
+                <View>
+            <Image source={{uri:item.picture.large}} style={{height:90,width:90}}/>
+        <Text> {item.email}</Text>
+                    
+                </View>
+            )
+            }
+        }
+        keyExtractor={({id}, index) => id}
+
+        />
+      </View>
+       
+    );
+  }
+}
