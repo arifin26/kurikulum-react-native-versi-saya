@@ -1,0 +1,167 @@
+import React, {Component} from 'react';
+import {
+  View,
+  Text,
+  FlatList,
+  ActivityIndicator,
+  Image,
+  StatusBar,
+  Linking,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
+
+export default class Test extends Component {
+  constructor (props) {
+    super (props);
+    this.state = {
+      isLoading: true,
+      dataSource: [],
+      data1: [],
+    };
+  }
+
+  test = () => {
+    fetch (
+      'https://masjidindonesia.000webhostapp.com/quran-json/daftar_surah.json'
+    )
+      .then (response => response.json ())
+      .then (responseJson => {
+        console.log (responseJson);
+        this.setState ({isLoading: false, dataSource: responseJson});
+      })
+      .catch (err => console.log (err));
+  };
+  componentDidMount () {
+    this.test ();
+  }
+
+  _separatorComponent = () => {
+    return <View style={{backgroundColor: 'grey'}} />;
+  };
+
+  button = dataItem => {
+    this.props.navigation.navigate ('persurat', {detil: dataItem});
+  };
+
+  _itemComponent = ({item}) => {
+    const {urutan, latin, arab, Text_arab, Text_arti, arti} = item;
+    return (
+      <View style={{}}>
+        <TouchableOpacity
+          onPress={() =>
+            this.button ([
+              `${urutan}`,
+              `${latin}`,
+              `${arab}`,
+              `${Text_arab} `,
+              `${Text_arti}`,
+              `${arti}`,
+            ])}
+          style={style.card}
+        >
+          <View style={style.image}>
+            <View style={style.ayat}>
+              <Text>{arab}</Text>
+            </View>
+          </View>
+          <View style={style.cardContent}>
+            <View style={{height: 80, width: 300}}>
+              <Text style={style.name}>{arab}</Text>
+              <Text style={style.count}>{arti}</Text>
+
+            </View>
+
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  render () {
+    return (
+      <View style={{flex: 1, alignItems: 'center'}}>
+        <StatusBar backgroundColor="#009688" barStyle="light-content" />
+        <View style={style.Search}>
+          <Text style={{color: '#fff'}}>
+            Al-Qur'an
+          </Text>
+        </View>
+        <View />
+        <FlatList
+          data={this.state.dataSource}
+          renderItem={this._itemComponent}
+          keyExtractor={(item, index) => item.toString ()}
+          onRefresh={this.test}
+          refreshing={this.state.isLoading}
+          ItemSeparatorComponent={this._separatorComponent}
+        />
+      </View>
+    );
+  }
+}
+
+const style = StyleSheet.create ({
+  card: {
+    shadowColor: '#00000021',
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+    elevation: 12,
+
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 20,
+    marginBottom: 20,
+    backgroundColor: 'white',
+    padding: 10,
+    flexDirection: 'row',
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: '#009688',
+  },
+  cardContent: {
+    marginLeft: 20,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  Search: {
+    flexDirection: 'row',
+    height: 50,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#009688',
+    elevation: 20,
+  },
+  image: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    borderWidth: 2,
+    borderColor: '#009688',
+  },
+  ayat: {
+    alignSelf: 'center',
+    marginTop: 32,
+  },
+  name: {
+    fontSize: 18,
+    flex: 1,
+    alignSelf: 'center',
+    color: '#009688',
+    fontWeight: 'bold',
+    marginRight: 100,
+    marginTop: 10,
+  },
+  count: {
+    fontSize: 14,
+    flex: 1,
+    alignSelf: 'center',
+    color: '#6666ff',
+    marginRight: 100,
+  },
+});
