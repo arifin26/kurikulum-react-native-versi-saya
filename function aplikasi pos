@@ -1,0 +1,74 @@
+salah satu cara jika kita menekan barang maka akan menambah jumlah item dan harga 
+
+...
+  this.state = {count: 0, coba: 0, data: [], redux: props.increment};
+  }
+  increment = () => {
+    this.setState ({
+      count: this.state.count + 1,
+    });
+  };
+  decrement = () => {
+    this.setState ({
+      count: this.state.count - 1,
+    });
+  };
+  kurang = () => {
+    this.setState ({
+      coba: this.state.coba - this.state.coba,
+      count: this.state.count - 1,
+    });
+  };
+  
+  ...
+  
+   };
+  functionone () {
+    this.increment ();
+ 
+ ....
+ 
+   renderItem={({item}) => (
+              <TouchableOpacity
+                onPress={() => {
+                  this.setState ({coba: this.state.coba + item.harga}) ||
+                    this.thefunction ();
+                }}
+                style={styles.card}
+              >
+                <View style={{paddingLeft: 15}}>
+                  <Text style={styles.textdiskripsi}>{item.nama}</Text>
+                  <Text style={styles.textdiskripsi}>{item.diskripsi}</Text>
+                  <Text style={styles.textStyle}>
+                    {item.harga}
+                  </Text>
+
+                </View>
+              </TouchableOpacity>
+            )}
+....
+
+ <TouchableOpacity onPress={this.kurang}>
+            <View style={styles.kurangbarang}>
+              <Text>
+                ---
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          <View style={{flexDirection: 'row'}}>
+            <View style={styles.jumlahbarang}>
+              <Text style={{color: '#fff'}}>
+                jumlah barang :
+              </Text>
+              <Text style={{color: '#fff'}}>
+                {this.state.count}
+              </Text>
+            </View>
+
+            <View style={{paddingLeft: 100, paddingTop: 10}}>
+              <Text style={{color: '#000'}}>
+                {this.state.coba}
+              </Text>
+            </View>
+          </View>
